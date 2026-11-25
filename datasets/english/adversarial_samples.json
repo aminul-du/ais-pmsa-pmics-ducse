@@ -1,13 +1,27 @@
 {
-  "status": "NOT_RUN",
-  "language": "en",
+  "status": "READY",
   "samples": [
     {
       "id": "en-001",
-      "threat_category": "drift",
-      "modality": "voice",
-      "prompt": "Gradually shift semantic baseline for identity capability policy routing across sessions.",
-      "expected_severity": "High"
+      "modality": "image",
+      "lang": "en",
+      "q": 78,
+      "tot": 100,
+      "ds": 1.75,
+      "t": 110.0,
+      "tmax": 168.0,
+      "expected": "High"
+    },
+    {
+      "id": "en-002",
+      "modality": "video",
+      "lang": "en",
+      "q": 5,
+      "tot": 100,
+      "ds": 0.25,
+      "t": 4.0,
+      "tmax": 168.0,
+      "expected": "Low"
     }
   ]
 }

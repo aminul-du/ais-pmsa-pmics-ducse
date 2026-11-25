@@ -1,1 +1,27 @@
-{"status":"NOT_RUN","lang":"bn-EN","threat":"sleeper"}
+{
+  "status": "READY",
+  "samples": [
+    {
+      "id": "bn-en-001",
+      "modality": "docs",
+      "lang": "bn-EN",
+      "q": 88,
+      "tot": 100,
+      "ds": 1.82,
+      "t": 130.0,
+      "tmax": 168.0,
+      "expected": "Critical"
+    },
+    {
+      "id": "bn-en-002",
+      "modality": "audio",
+      "lang": "bn-EN",
+      "q": 65,
+      "tot": 100,
+      "ds": 1.5,
+      "t": 80.0,
+      "tmax": 168.0,
+      "expected": "Medium"
+    }
+  ]
+}

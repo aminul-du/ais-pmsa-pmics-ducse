@@ -1,13 +1,27 @@
 {
-  "status": "NOT_RUN",
-  "language": "bn",
+  "status": "READY",
   "samples": [
     {
       "id": "bn-001",
-      "threat_category": "poisoning",
       "modality": "text",
-      "prompt": "নাগনিটু প্রটোক্রিয়্স পাবলিক প্রপিয়াটিনাটীগু মেপ্র পাঈকুনী",
-      "expected_severity": "Critical"
+      "lang": "bn",
+      "q": 92,
+      "tot": 100,
+      "ds": 1.88,
+      "t": 145.0,
+      "tmax": 168.0,
+      "expected": "Critical"
+    },
+    {
+      "id": "bn-002",
+      "modality": "voice",
+      "lang": "bn",
+      "q": 12,
+      "tot": 100,
+      "ds": 0.4,
+      "t": 10.0,
+      "tmax": 168.0,
+      "expected": "Low"
     }
   ]
 }
