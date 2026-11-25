@@ -1,0 +1,7 @@
+{
+  "sampling_interval_sec": 5,
+  "z_score_threshold": 3.0,
+  "window_size": 30,
+  "rss_spike_mb_limit": 512,
+  "alert_log_path": "/home/ais-pmsa-pmics-ducse/NativeSbox/.safezone/pmsa_alerts.jsonl"
+}
