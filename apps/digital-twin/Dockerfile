@@ -8,5 +8,5 @@ FROM debian:bookworm-slim
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl && rm -rf /var/lib/apt/lists/*
 COPY --from=builder /app/target/release/shorborno-digital-twin /usr/local/bin/shorborno-digital-twin
 EXPOSE 8090
-HEALTHCHECK --interval=30s --timeout=3s CMD curl -sf http://127.0.0 || exit 1
+HEALTHCHECK --interval=30s --timeout=3s CMD curl -sf http://localhost:8090/health || exit 1
 CMD ["shorborno-digital-twin"]
