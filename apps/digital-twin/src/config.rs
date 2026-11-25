@@ -1,5 +1,5 @@
 pub const SERVICE_NAME: &str = "shorborno-digital-twin";
-pub const BIND_ADDR: ([u8; 4], u16) = ([0u8; 4], 8090);
+pub const BIND_ADDR: ([u8; 4], u16) = ([0, 0, 0, 0], 8090);
 pub const SYNC_INTERVAL_SECS: u64 = 60;
 pub const MAX_HORIZON_HOURS: f64 = 168.0;
 pub const BGE_M3_MAX_COSINE_DIST: f64 = 2.0;
@@ -8,4 +8,3 @@ pub const WEBRTC_RTT_BUDGET_MS: u64 = 250;
 pub const THRESHOLD_CRITICAL: f64 = 0.75;
 pub const THRESHOLD_HIGH: f64 = 0.50;
 pub const THRESHOLD_MEDIUM: f64 = 0.25;
-pub const AIGOV_AUDIT_ENFORCED: bool = true;
