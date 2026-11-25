@@ -1,0 +1,8 @@
+repos:
+  - repo: local
+    hooks:
+      - id: ais-pro-domain-isolation
+        name: AIS-PRO Strict Domain Scope & Zero-Secret Guard
+        entry: bash -c 'if grep -rnE "(mcore|BEGIN OPENSSH PRIVATE KEY|ghp_)" -- . ":!scripts/pmics_status.sh" ":!scripts/e2e-verify-pmsa.sh" ":!.pre-commit-config.yaml"; then echo "ERROR: Domain leak or secret detected!"; exit 1; fi'
+        language: system
+        pass_filenames: false

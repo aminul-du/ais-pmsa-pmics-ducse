@@ -16,3 +16,4 @@ build/
 *.sqlite
 *.db
 *.log
+id_ed25519*
