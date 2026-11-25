@@ -1,0 +1,40 @@
+name: PMSA-SHORBORNOAI CI & Integrity Verification
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository with full tags
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Rust Unit Tests (if Cargo.toml present)
+        run: |
+          if find . -maxdepth 3 -name "Cargo.toml" | grep -q .; then
+            cargo test --manifest-path $(find . -maxdepth 3 -name "Cargo.toml" | head -n 1)
+          else
+            echo "No Cargo.toml at root depth; skipping Rust step."
+          fi
+
+      - name: Run Python Test Suite (if pytest tests present)
+        run: |
+          if [ -d "tests" ] && find tests -name "test_*.py" | grep -q .; then
+            python3 -m pip install --upgrade pip pytest
+            pytest
+          else
+            echo "No pytest files detected; skipping Python step."
+          fi
+
+      - name: Verify Governance & Evidence Artifacts
+        run: |
+          test -f README.md
+          test -f SECURITY.md
+          test -f CITATION.cff
+          echo "Governance & Academic Citation Artifacts Verified."
