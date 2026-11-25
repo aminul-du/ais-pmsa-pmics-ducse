@@ -1,0 +1,13 @@
+# Repository Creation & Verification Acceptance Report
+- **GitHub Repository URL:** `https://github.com`
+- **Local Absolute Path:** `/home/ais-pmsa-pmics-ducse/NativeSbox/ais-pmsa-pmics-ducse`
+- **Bare Mirror Path:** `/home/ais-pmsa-pmics-ducse/NativeSbox/bare-repos/ais-pmsa-pmics-ducse.git`
+- **Repository Owner:** `aminul-du`
+- **Branch Name:** `main`
+- **Lossless Ancestor Verified:** `b30957f` -> `HEAD` (`COMPLETE`)
+- **Zero-Trust Isolation (`0700`):** `/home/ais-pmsa-pmics-ducse/NativeSbox`, `/home/ais-pmsa-pmics-ducse/NativeSbox/.safezone`, `/home/ais-pmsa-pmics-ducse/NativeSbox/bare-repos`, `/home/ais-pmsa-pmics-ducse/NativeSbox/ais-pmsa-pmics-ducse` (`COMPLETE`)
+- **Credential Exposure Check:** Zero keys or `.env` staged; `/home/ais-pmsa-pmics-ducse/NativeSbox/.safezone/gitignore_global` active (`COMPLETE`)
+- **Academic Separation & Attribution:** University of Dhaka PMICS (Researchers: Md. Aminul Islam, Alvee Talukder; Supervisor: Prof. Dr. Md. Rezaul Karim); Reused stack documented (`COMPLETE`)
+- **Unexecuted Experiments Status:** `NOT_RUN`
+- **Verified Timestamp (UTC):** `2026-11-25T11:38:11Z`
+- **Report SHA-256 Digest:** `9480bba85357ecc8916b9ab55f998c9906a2aaf0a0dcd63dfc0c5ebb37cf9c29`
