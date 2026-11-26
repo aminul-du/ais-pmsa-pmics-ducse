@@ -1,6 +1,6 @@
 # Consolidated Compliance & Security Architecture Evidence Catalog
 
-- **System Identifier:** `MCORE-FDR-AIS-001` (`/home/ais-pmsa-pmics-ducse/NativeSbox`)
+- **System Identifier:** `DU-CSE-AIS-001` (`/home/ais-pmsa-pmics-ducse/NativeSbox`)
 - **Repository Scope:** `aminul-du/ais-pmsa-pmics-ducse` (Isolated Multi-Repo Safe Zone)
 - **Evidence Version:** 1.0.0
 - **Generated Timestamp (UTC):** `2026-11-25T10:42:22Z`
@@ -33,7 +33,7 @@ Following the [Hack23 Public ISMS](https://github.com/Hack23/ISMS-PUBLIC) eviden
 ## 4. Machine Audit Log Excerpt
 ```text
 === STARTING END-TO-END ENTERPRISE & HACK23 COMPLIANCE AUDIT ===
-[PASS] Principal Identity Verified: ais-pmsa-pmics-ducse on MCORE-FDR-AIS-001
+[PASS] Principal Identity Verified: ais-pmsa-pmics-ducse on DU-CSE-AIS-001
 [PASS] Zero-Trust Filesystem Isolation: NativeSbox (700) & .safezone (700)
 [PASS] Cryptographic Key Vault Hardened (600): id_ec2_final [SHA256:v9VSIk1NTrv+7TejeOvuCvLJ/0DxpG4tmFsw0Zdtnrw]
 [PASS] Scoped Git Governance Active: includeIf bound to /home/ais-pmsa-pmics-ducse/NativeSbox/.safezone/gitconfig.isolated
@@ -44,7 +44,7 @@ Following the [Hack23 Public ISMS](https://github.com/Hack23/ISMS-PUBLIC) eviden
 ```
 
 ## 5. Independent Auditor Verification Commands
-Auditors and customer security teams can independently verify control effectiveness on `MCORE-FDR-AIS-001` using:
+Auditors and customer security teams can independently verify control effectiveness on `DU-CSE-AIS-001` using:
 ```bash
 stat -c "%a %U:%G %n" /home/ais-pmsa-pmics-ducse/NativeSbox /home/ais-pmsa-pmics-ducse/NativeSbox/.safezone
 cd /home/ais-pmsa-pmics-ducse/NativeSbox/ais-pmsa-pmics-ducse && git config --list --show-origin
