@@ -10,8 +10,8 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@repo/trust-contracts": "workspace:*",
-    "@repo/ui": "workspace:*",
+    "@repo/trust-contracts": "*",
+    "@repo/ui": "*",
     "next": "^15.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
