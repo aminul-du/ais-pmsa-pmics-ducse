@@ -20,3 +20,5 @@ id_ed25519*
 venv/
 *.pyc
 .cloudflared/
+.next/
+.turbo/

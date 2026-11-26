@@ -1,0 +1,12 @@
+{
+  "name": "@repo/ui",
+  "version": "0.1.0",
+  "private": true,
+  "exports": {
+    "./WorkspaceBanner": "./src/WorkspaceBanner.tsx",
+    "./MultiVendorMatrix": "./src/MultiVendorMatrix.tsx"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  }
+}
