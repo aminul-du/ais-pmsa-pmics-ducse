@@ -55,7 +55,7 @@ def bridge_health():
     try:
         local_info = _http_get(f"{LOCAL_TRUST_URL}/health", timeout=2.0)
         local_ok = local_info.get("http_status") == 200
-    except URLError as exc:
+    except Exception as exc:
         local_info = {"error": str(exc)}
 
     gcp_reachable = False
@@ -63,7 +63,7 @@ def bridge_health():
     try:
         gcp_info = _http_get(GCP_SPOKE_URL, timeout=4.0)
         gcp_reachable = gcp_info.get("http_status") == 200
-    except URLError as exc:
+    except Exception as exc:
         gcp_info = {"error": str(exc)}
 
     return {
@@ -79,7 +79,7 @@ def bridge_health():
 def spoke_status():
     try:
         state = _http_get(f"{LOCAL_TRUST_URL}/api/state", timeout=3.0)
-    except URLError as exc:
+    except Exception as exc:
         raise HTTPException(status_code=503, detail=f"Local trust API unreachable: {exc}")
     return {
         "bridge": "127.0.0.1:18413",
@@ -92,7 +92,7 @@ def spoke_status():
 def spoke_evaluate(item: SpokeEvalPayload):
     try:
         result = _http_post_json(f"{LOCAL_TRUST_URL}/api/memory", item.model_dump())
-    except URLError as exc:
+    except Exception as exc:
         raise HTTPException(status_code=503, detail=f"Local trust API unreachable: {exc}")
     return {
         "cloud_spoke_url": GCP_SPOKE_URL,
