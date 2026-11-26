@@ -1,0 +1,27 @@
+# Dedicated Cloudflare QUIC Tunnel for ShorbornoAI (Isolated from existing host tunnels)
+# Replace <SHORBORNO_TUNNEL_UUID> after creating the tunnel and binding DNS routes:
+#   cloudflared tunnel --config /opt/workspace/ais-pmsa-pmics-ducse/.cloudflared/config.yml create shorbornoai-quic
+#   cloudflared tunnel --config /opt/workspace/ais-pmsa-pmics-ducse/.cloudflared/config.yml route dns shorbornoai-quic shorbornoai.com
+#   cloudflared tunnel --config /opt/workspace/ais-pmsa-pmics-ducse/.cloudflared/config.yml route dns shorbornoai-quic api.shorbornoai.com
+#   cloudflared tunnel --config /opt/workspace/ais-pmsa-pmics-ducse/.cloudflared/config.yml route dns shorbornoai-quic spoke.shorbornoai.com
+#   cloudflared tunnel --config /opt/workspace/ais-pmsa-pmics-ducse/.cloudflared/config.yml route dns shorbornoai-quic sandbox.shorbornoai.com
+#   cloudflared tunnel --config /opt/workspace/ais-pmsa-pmics-ducse/.cloudflared/config.yml route dns shorbornoai-quic voice.shorbornoai.com
+
+tunnel: <SHORBORNO_TUNNEL_UUID>
+credentials-file: /opt/workspace/ais-pmsa-pmics-ducse/.cloudflared/<SHORBORNO_TUNNEL_UUID>.json
+protocol: quic
+
+ingress:
+  - hostname: api.shorbornoai.com
+    service: http://127.0.0.1:18411
+  - hostname: spoke.shorbornoai.com
+    service: http://127.0.0.1:18413
+  - hostname: sandbox.shorbornoai.com
+    service: http://127.0.0.1:18411
+  - hostname: voice.shorbornoai.com
+    service: http://127.0.0.1:18411
+  - hostname: shorbornoai.com
+    service: https://shorbornoai-launch-469173990872.us-central1.run.app
+    originRequest:
+      httpHostHeader: shorbornoai-launch-469173990872.us-central1.run.app
+  - service: http_status:404
