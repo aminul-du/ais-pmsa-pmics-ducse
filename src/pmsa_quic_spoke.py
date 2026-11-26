@@ -1,7 +1,7 @@
+import json
 import os
 from urllib import request as urlreq
 from urllib.error import URLError
-import json
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -33,7 +33,7 @@ def _http_get(url: str, timeout: float = 4.0) -> dict:
         ctype = resp.headers.get("Content-Type", "")
         if "application/json" in ctype:
             return {"http_status": resp.status, "json": json.loads(raw)}
-        return {"http_status": resp.status, "title_or_bytes": len(raw.encode("utf-8")), "is_html": "<html" in raw.lower()}
+        return {"http_status": resp.status, "bytes": len(raw.encode("utf-8")), "is_html": "<html" in raw.lower()}
 
 
 def _http_post_json(url: str, body: dict, timeout: float = 5.0) -> dict:
