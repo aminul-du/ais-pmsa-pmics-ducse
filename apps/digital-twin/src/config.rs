@@ -1,5 +1,6 @@
+use std::net::Ipv4Addr;
 pub const SERVICE_NAME: &str = "shorborno-digital-twin";
-pub const BIND_ADDR: ([u8; 4], u16) = ([0, 0, 0, 0], 8090);
+pub const BIND_ADDR: (Ipv4Addr, u16) = (Ipv4Addr::UNSPECIFIED, 8090);
 pub const SYNC_INTERVAL_SECS: u64 = 60;
 pub const MAX_HORIZON_HOURS: f64 = 168.0;
 pub const BGE_M3_MAX_COSINE_DIST: f64 = 2.0;

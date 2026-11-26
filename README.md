@@ -3,7 +3,7 @@
 **Subtitle:** A Memory Risk Assessment Framework Using the ShorbornoAI Bengali Knowledge Platform  
 **Institution:** University of Dhaka  
 **Program:** Professional Masters in Information and Cyber Security (PMICS)  
-**Version:** v0.1.0  
+**Version:** v1.1.0  
 
 ## Authors & Supervision
 - **Researchers:** Md. Aminul Islam (Roll: 70002, Contact: aminul@aminul-du.com), Alvee Talukder (Roll: 70062)
