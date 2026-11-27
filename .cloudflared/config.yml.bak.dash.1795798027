@@ -1,0 +1,16 @@
+tunnel: 09332c09-4e9a-42f2-8487-d2a2a1d37dda
+credentials-file: /opt/workspace/ais-pmsa-pmics-ducse/.cloudflared/09332c09-4e9a-42f2-8487-d2a2a1d37dda.json
+protocol: quic
+
+ingress:
+  - hostname: api.shorbornoai.com
+    service: http://127.0.0.1:18411
+  - hostname: sandbox.shorbornoai.com
+    service: http://127.0.0.1:18411
+  - hostname: voice.shorbornoai.com
+    service: http://127.0.0.1:18411
+  - hostname: spoke.shorbornoai.com
+    service: http://127.0.0.1:18413
+  - hostname: shorbornoai.com
+    service: http://127.0.0.1:3010
+  - service: http_status:404

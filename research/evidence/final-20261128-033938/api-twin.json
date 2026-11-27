@@ -1,0 +1,1 @@
+{"timestamp":"2026-11-27T21:40:09.267Z","connected":true,"status":"CONNECTED","endpoints":{"/health":{"service":"shorborno-digital-twin","status":"healthy","sync_secs":60}}}
