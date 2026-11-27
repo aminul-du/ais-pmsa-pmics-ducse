@@ -3,16 +3,16 @@ credentials-file: /opt/workspace/ais-pmsa-pmics-ducse/.cloudflared/09332c09-4e9a
 protocol: quic
 
 ingress:
-  - hostname: shorbornoai.com
-    service: http://127.0.0.1:3020
   - hostname: api.shorbornoai.com
     service: http://127.0.0.1:18411
-  - hostname: twin.shorbornoai.com
-    service: http://127.0.0.1:8090
-  - hostname: spoke.shorbornoai.com
-    service: http://127.0.0.1:18413
   - hostname: sandbox.shorbornoai.com
-    service: http://127.0.0.1:3010
+    service: http://127.0.0.1:18411
   - hostname: voice.shorbornoai.com
     service: http://127.0.0.1:18411
+  - hostname: spoke.shorbornoai.com
+    service: http://127.0.0.1:18413
+  - hostname: twin.shorbornoai.com
+    service: http://127.0.0.1:8090
+  - hostname: shorbornoai.com
+    service: http://127.0.0.1:3020
   - service: http_status:404
