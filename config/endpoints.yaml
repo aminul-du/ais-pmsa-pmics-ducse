@@ -1,0 +1,31 @@
+metadata:
+  canonical_repo: /opt/workspace/ais-pmsa-pmics-ducse
+  tunnel_id: 09332c09-4e9a-42f2-8487-d2a2a1d37dda
+  tunnel_cname_target: 09332c09-4e9a-42f2-8487-d2a2a1d37dda.cfargotunnel.com
+  cloudrun_origin: https://shorbornoai-launch-469173990872.us-central1.run.app
+
+endpoints:
+  main_web:
+    domain: shorbornoai.com
+    local_origin: http://127.0.0.1:3020
+    port: 3020
+  trust_api:
+    domain: api.shorbornoai.com
+    local_origin: http://127.0.0.1:18411
+    port: 18411
+  digital_twin:
+    domain: twin.shorbornoai.com
+    local_origin: http://127.0.0.1:8090
+    port: 8090
+  quic_spoke:
+    domain: spoke.shorbornoai.com
+    local_origin: http://127.0.0.1:18413
+    port: 18413
+  sandbox:
+    domain: sandbox.shorbornoai.com
+    local_origin: http://127.0.0.1:3010
+    port: 3010
+  voice:
+    domain: voice.shorbornoai.com
+    local_origin: http://127.0.0.1:18411
+    port: 18411

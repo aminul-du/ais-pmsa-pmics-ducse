@@ -1,0 +1,23 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/api/evidence/route": "/api/evidence",
+  "/api/observability/route": "/api/observability",
+  "/api/recover/route": "/api/recover",
+  "/api/twin/route": "/api/twin",
+  "/api/state/route": "/api/state",
+  "/api/voice/route": "/api/voice",
+  "/api/evaluate/route": "/api/evaluate",
+  "/chat/page": "/chat",
+  "/knowledge-hub/page": "/knowledge-hub",
+  "/observability/page": "/observability",
+  "/page": "/",
+  "/reports/page": "/reports",
+  "/sandbox/page": "/sandbox",
+  "/security/page": "/security",
+  "/trust/page": "/trust",
+  "/twin/page": "/twin",
+  "/visualizations/page": "/visualizations",
+  "/voice-studio/page": "/voice-studio",
+  "/workflow-studio/page": "/workflow-studio",
+  "/agent-studio/page": "/agent-studio"
+}

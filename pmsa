@@ -1,0 +1,237 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+REPO="/opt/workspace/ais-pmsa-pmics-ducse"
+BACKUP_ROOT="/opt/workspace/backups"
+SYSTEMD_UNITS=(pmsa-trust-api.service pmsa-quic-spoke.service shorbornoai-quic.service)
+DOMAINS=(shorbornoai.com api.shorbornoai.com twin.shorbornoai.com spoke.shorbornoai.com sandbox.shorbornoai.com voice.shorbornoai.com)
+
+http_code() {
+  curl -sS -o /dev/null -w "%{http_code}" --max-time 4 "$1" 2>/dev/null || echo "000"
+}
+
+port_pid() {
+  ss -tulpn 2>/dev/null | grep -E "[[:space:]](127\.0\.0\.1|0\.0\.0\.0|\*):$1[[:space:]]" | grep -oE "pid=[0-9]+" | head -n1 | cut -d= -f2 || true
+}
+
+cmd_tree() {
+  echo "=== Canonical Monorepo Tree ($REPO) ==="
+  find "$REPO" -maxdepth 2 \
+    -not -path "*/.git*" -not -path "*/node_modules*" -not -path "*/.next*" \
+    -not -path "*/target*" -not -path "*/venv*" -not -path "*/__pycache__*" \
+    | sed "s|$REPO|.|" | sort
+}
+
+cmd_status() {
+  echo "=== Systemd Services ==="
+  for u in "${SYSTEMD_UNITS[@]}"; do
+    printf "%-28s %s\n" "$u" "$(systemctl is-active "$u" 2>/dev/null || true)"
+  done
+  echo ""
+  echo "=== Local Port & Provenance Matrix ==="
+  printf "%-8s %-8s %-10s %-45s\n" "PORT" "PID" "HTTP" "PROCESS CWD"
+  for p in 3000 3001 3010 3020 8090 18411 18413; do
+    pid="$(port_pid "$p")"
+    if [ -n "$pid" ]; then
+      cwd="$(readlink -f "/proc/$pid/cwd" 2>/dev/null || echo "unreadable")"
+      code="$(http_code "http://127.0.0.1:${p}/")"
+      [ "$p" = "8090" ] && code="$(http_code "http://127.0.0.1:${p}/health")"
+      printf "%-8s %-8s %-10s %-45s\n" ":$p" "$pid" "$code" "$cwd"
+    else
+      printf "%-8s %-8s %-10s %-45s\n" ":$p" "-" "DOWN" "-"
+    fi
+  done
+}
+
+cmd_start() {
+  for u in "${SYSTEMD_UNITS[@]}"; do
+    systemctl start "$u" 2>/dev/null || echo "[WARN] Failed to start $u"
+  done
+  cmd_status
+}
+
+cmd_stop() {
+  for u in "${SYSTEMD_UNITS[@]}"; do
+    systemctl stop "$u" 2>/dev/null || true
+  done
+  echo "Managed systemd services stopped."
+}
+
+cmd_restart() {
+  for u in "${SYSTEMD_UNITS[@]}"; do
+    systemctl restart "$u" 2>/dev/null || echo "[WARN] Failed to restart $u"
+  done
+  sleep 2
+  cmd_status
+}
+
+cmd_build() {
+  cd "$REPO"
+  echo "=== Turborepo Typecheck & Build ==="
+  npm run check-types
+  npm run build
+}
+
+cmd_validate() {
+  cd "$REPO"
+  echo "=== Configuration & Integrity Validation ==="
+  [ -f "$REPO/config/endpoints.yaml" ] && echo "[OK] config/endpoints.yaml present" || echo "[FAIL] config/endpoints.yaml missing"
+  [ -f "$REPO/turbo.json" ] && echo "[OK] turbo.json present" || echo "[FAIL] turbo.json missing"
+  if [ -f "$REPO/.cloudflared/config.yml" ]; then
+    echo "[OK] .cloudflared/config.yml present"
+  else
+    echo "[WARN] .cloudflared/config.yml not found in repo root"
+  fi
+  if [ -f "$REPO/infra/tunnel/run_shorborno_quic.sh" ]; then
+    [ -x "$REPO/infra/tunnel/run_shorborno_quic.sh" ] && echo "[OK] run_shorborno_quic.sh executable" || echo "[FAIL] run_shorborno_quic.sh not executable"
+  fi
+  npm run check-types >/dev/null 2>&1 && echo "[OK] Turborepo check-types passed" || echo "[WARN] Turborepo check-types failed"
+}
+
+cmd_verify() {
+  echo "=== Public Domain Connectivity Verification ==="
+  printf "%-28s %-10s %-12s\n" "DOMAIN" "HTTPS" "DNS_CNAME"
+  for d in "${DOMAINS[@]}"; do
+    code="$(http_code "https://${d}/")"
+    [ "$d" = "twin.shorbornoai.com" ] && code="$(http_code "https://${d}/health")"
+    dns="$(getent hosts "$d" 2>/dev/null | awk "{print \$1}" | head -n1 || true)"
+    [ -z "$dns" ] && dns="UNRESOLVED"
+    printf "%-28s %-10s %-12s\n" "$d" "$code" "$dns"
+  done
+}
+
+cmd_backup() {
+  ts="$(date +%Y%m%d-%H%M%S)"
+  dest="$BACKUP_ROOT/pmsa-backup-${ts}"
+  mkdir -p "$dest"
+  for item in config .cloudflared infra/tunnel telemetry_ledger.jsonl turbo.json package.json; do
+    [ -e "$REPO/$item" ] && cp -a "$REPO/$item" "$dest/" 2>/dev/null || true
+  done
+  git -C "$REPO" bundle create "$dest/repo.bundle" --all >/dev/null 2>&1 || true
+  echo "Backup created at: $dest"
+}
+
+cmd_recover() {
+  echo "=== Triggering Trust API Recovery Endpoint ==="
+  code="$(curl -sS -o /tmp/pmsa_recover_out.txt -w "%{http_code}" -X POST --max-time 5 http://127.0.0.1:18411/api/recover 2>/dev/null || echo "000")"
+  echo "POST /api/recover -> HTTP $code"
+  [ -f /tmp/pmsa_recover_out.txt ] && head -c 300 /tmp/pmsa_recover_out.txt; echo ""
+  latest_bk="$(ls -1dt "$BACKUP_ROOT"/pmsa-* 2>/dev/null | head -n1 || true)"
+  echo "Latest config/repo backup available: ${latest_bk:-NONE}"
+}
+
+cmd_report() {
+  local blockers=()
+  local api_st spoke_st tunnel_st
+  api_st="$(systemctl is-active pmsa-trust-api.service 2>/dev/null || echo "inactive")"
+  spoke_st="$(systemctl is-active pmsa-quic-spoke.service 2>/dev/null || echo "inactive")"
+  tunnel_st="$(systemctl is-active shorbornoai-quic.service 2>/dev/null || echo "inactive")"
+
+  local web_pid twin_pid twin_cwd twin_http web_http api_http
+  web_pid="$(port_pid 3020)"
+  twin_pid="$(port_pid 8090)"
+  twin_cwd=""
+  [ -n "$twin_pid" ] && twin_cwd="$(readlink -f "/proc/$twin_pid/cwd" 2>/dev/null || true)"
+  web_http="$(http_code "http://127.0.0.1:3020/")"
+  twin_http="$(http_code "http://127.0.0.1:8090/health")"
+  api_http="$(http_code "http://127.0.0.1:18411/health")"
+
+  echo "=========================================================================="
+  echo " AIS-PMSA PHASE 1 — LIVE EVIDENCE-BASED READINESS REPORT"
+  echo "=========================================================================="
+  echo ""
+  echo "## 1. Canonical Monorepo Tree"
+  cmd_tree | head -n 40
+  echo ""
+  echo "## 2. Service and Port Matrix"
+  cmd_status
+  echo ""
+  echo "## 3. Domain Connectivity Status"
+  cmd_verify
+  echo ""
+
+  local cfg_cls="COMPLETE"
+  [ ! -f "$REPO/config/endpoints.yaml" ] && cfg_cls="BLOCKED"
+  [ "$tunnel_st" != "active" ] && cfg_cls="PARTIAL"
+  echo "## 4. Configuration Reconciliation Status: ${cfg_cls}"
+  echo "- Centralized authority: $REPO/config/endpoints.yaml"
+  echo "- Tunnel service (shorbornoai-quic.service): ${tunnel_st}"
+  if [ "$tunnel_st" != "active" ]; then
+    blockers+=("shorbornoai-quic.service is ${tunnel_st} (see journalctl -u shorbornoai-quic.service -n 15)")
+  fi
+
+  local web_cls="PARTIAL"
+  [ -n "$web_pid" ] && [ "$web_http" != "000" ] && web_cls="COMPLETE"
+  [ -z "$web_pid" ] && web_cls="BLOCKED"
+  echo ""
+  echo "## 5. Main Website Status: ${web_cls}"
+  echo "- Local :3020 PID=${web_pid:-NONE} HTTP=${web_http}"
+  echo "- Additional Next.js listeners detected: :3000 (PID=$(port_pid 3000)), :3010 (PID=$(port_pid 3010))"
+
+  local twin_cls="PARTIAL"
+  local twin_dns="$(getent hosts twin.shorbornoai.com 2>/dev/null | head -n1 || true)"
+  if [ -n "$twin_pid" ] && [ "$twin_http" = "200" ] && [ -n "$twin_dns" ]; then
+    twin_cls="COMPLETE"
+  elif [ -z "$twin_pid" ]; then
+    twin_cls="BLOCKED"
+  fi
+  [ -z "$twin_dns" ] && blockers+=("DNS CNAME for twin.shorbornoai.com is not yet created in Cloudflare")
+  echo ""
+  echo "## 6. Digital Twin Status: ${twin_cls}"
+  echo "- Local :8090 PID=${twin_pid:-NONE} HTTP=${twin_http} CWD=${twin_cwd:-NONE}"
+  echo "- Public DNS twin.shorbornoai.com: ${twin_dns:-UNRESOLVED}"
+
+  local pred_cls="PARTIAL"
+  [ "$api_st" = "active" ] && [ "$spoke_st" = "active" ] && pred_cls="COMPLETE"
+  echo ""
+  echo "## 7. Predictive Engine Status: ${pred_cls}"
+  echo "- pmsa-trust-api.service (:18411): ${api_st} (HTTP ${api_http})"
+  echo "- pmsa-quic-spoke.service (:18413): ${spoke_st}"
+
+  echo ""
+  echo "## 8. AI Agent Status: NOT TESTED"
+  echo "- Dedicated autonomous AI Agent service is preserved as a Phase 2 / post-stabilization target."
+
+  local latest_bk="$(ls -1dt "$BACKUP_ROOT"/pmsa-* 2>/dev/null | head -n1 || true)"
+  local bk_cls="COMPLETE"
+  [ -z "$latest_bk" ] && bk_cls="BLOCKED"
+  echo ""
+  echo "## 9. Backup and Rollback Status: ${bk_cls}"
+  echo "- Latest snapshot: ${latest_bk:-NONE}"
+  echo "- Latest Git tag : $(git -C "$REPO" tag -l "phase1-pre-consolidation-*" | tail -n1 || echo "NONE")"
+
+  echo ""
+  echo "## 10. Remaining Blockers"
+  if [ "${#blockers[@]}" -eq 0 ]; then
+    echo "- None."
+  else
+    for b in "${blockers[@]}"; do
+      echo "- [BLOCKER] $b"
+    done
+  fi
+
+  local final_cls="COMPLETE"
+  [ "${#blockers[@]}" -gt 0 ] && final_cls="PARTIAL"
+  [ "$api_st" != "active" ] && final_cls="BLOCKED"
+  echo ""
+  echo "## 11. Final Lab Readiness Status: ${final_cls}"
+  echo "=========================================================================="
+}
+
+case "${1:-}" in
+  status)   cmd_status ;;
+  tree)     cmd_tree ;;
+  start)    cmd_start ;;
+  stop)     cmd_stop ;;
+  restart)  cmd_restart ;;
+  build)    cmd_build ;;
+  validate) cmd_validate ;;
+  verify)   cmd_verify ;;
+  backup)   cmd_backup ;;
+  recover)  cmd_recover ;;
+  report)   cmd_report ;;
+  *)
+    echo "Usage: ./pmsa {status|tree|start|stop|restart|build|validate|verify|backup|recover|report}"
+    exit 1
+    ;;
+esac

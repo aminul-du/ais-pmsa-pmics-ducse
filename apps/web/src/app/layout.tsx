@@ -1,24 +1,17 @@
 import type { Metadata } from "next";
-import React from "react";
 import "./globals.css";
-import { WorkspaceBanner } from "@repo/ui/WorkspaceBanner";
+import NavShell from "../components/NavShell";
 
 export const metadata: Metadata = {
-  title: "ShorbornoAI — Sovereign Memory Trust & Multi-Vendor OS",
-  description:
-    "ShorbornoAI workspace with Turborepo 2.0, Next.js TypeScript + Tailwind CSS, FAISS similarity benchmarking, and multi-vendor engine architecture."
+  title: "ShorbornoAI & AIS-PMSA Research Dashboard",
+  description: "Multi-page research UI for ShorbornoAI and AIS-PMSA",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className="min-h-screen bg-slate-950 text-slate-100 antialiased">
-        <WorkspaceBanner
-          activeZoneLabel="ShorbornoAI · shorbornoai.com"
-          docsUrl="https://interactive-docs.shorbornoai.com"
-          voiceUrl="https://voice.sorbornoai.com/"
-        />
-        {children}
+    <html lang="en" data-theme="light">
+      <body>
+        <NavShell>{children}</NavShell>
       </body>
     </html>
   );

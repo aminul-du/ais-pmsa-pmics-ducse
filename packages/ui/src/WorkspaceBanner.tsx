@@ -9,7 +9,7 @@ interface WorkspaceBannerProps {
 export function WorkspaceBanner({
   activeZoneLabel = "ShorbornoAI Isolated Zone (shorbornoai.com)",
   docsUrl = "https://interactive-docs.shorbornoai.com",
-  voiceUrl = "https://voice.sorbornoai.com/"
+  voiceUrl = "https://voice.shorbornoai.com/"
 }: WorkspaceBannerProps) {
   return (
     <div className="w-full border-b border-slate-800 bg-slate-950/95 px-4 py-2.5 text-xs text-slate-200">
@@ -36,7 +36,7 @@ export function WorkspaceBanner({
             rel="noreferrer"
             className="rounded border border-amber-500/40 bg-amber-500/10 px-2.5 py-1 font-medium text-amber-300 transition hover:bg-amber-500/20"
           >
-            Voice Workspace (voice.sorbornoai.com) →
+            Voice Workspace (voice.shorbornoai.com) →
           </a>
         </div>
       </div>

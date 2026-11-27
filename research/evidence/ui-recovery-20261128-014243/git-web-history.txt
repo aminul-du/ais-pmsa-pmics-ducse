@@ -1,0 +1,7 @@
+5c0959c fix(monorepo): use npm workspace wildcard version instead of workspace: protocol
+fce84b2 feat(monorepo): add Turborepo 2.0 Next.js apps, multi-vendor layout, and FAISS benchmark
+7ed49ef chore(scaffold): add non-destructive academic directory structure & acceptance report
+12c6e0b feat(complete): add methodology, UI visualizer, and E2E governance proof v0.7.0
+979b982 feat(simulation): add Axum what-if simulation endpoints and React DriftVisualizer v0.4.0
+aa4707a feat(pmsa): add methodology chapter and Rust Digital Twin risk engine v0.2.0
+22cc351 chore(init): initialize PMICS predictive-memory-security v0.1.0

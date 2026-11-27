@@ -1,0 +1,15 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/observability/layout,_N_T_/observability/page,_N_T_/observability"
+  },
+  "routeCache": {
+    "key": "/route-cache/APP_PAGE/f863883550d9a0af49effee324ff4f9d63bafd9eaeb07a9195e463111abae592/$/observability",
+    "owner": {
+      "kind": "APP_PAGE",
+      "sourceRoute": "/observability/page"
+    },
+    "isFallback": false
+  }
+}

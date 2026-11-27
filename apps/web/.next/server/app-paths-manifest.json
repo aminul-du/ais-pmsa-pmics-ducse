@@ -1,0 +1,23 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/evidence/route": "app/api/evidence/route.js",
+  "/api/observability/route": "app/api/observability/route.js",
+  "/api/recover/route": "app/api/recover/route.js",
+  "/api/twin/route": "app/api/twin/route.js",
+  "/api/state/route": "app/api/state/route.js",
+  "/api/voice/route": "app/api/voice/route.js",
+  "/api/evaluate/route": "app/api/evaluate/route.js",
+  "/chat/page": "app/chat/page.js",
+  "/knowledge-hub/page": "app/knowledge-hub/page.js",
+  "/observability/page": "app/observability/page.js",
+  "/page": "app/page.js",
+  "/reports/page": "app/reports/page.js",
+  "/sandbox/page": "app/sandbox/page.js",
+  "/security/page": "app/security/page.js",
+  "/trust/page": "app/trust/page.js",
+  "/twin/page": "app/twin/page.js",
+  "/visualizations/page": "app/visualizations/page.js",
+  "/voice-studio/page": "app/voice-studio/page.js",
+  "/workflow-studio/page": "app/workflow-studio/page.js",
+  "/agent-studio/page": "app/agent-studio/page.js"
+}
