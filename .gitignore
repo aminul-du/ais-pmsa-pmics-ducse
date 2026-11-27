@@ -20,3 +20,6 @@ id_ed25519*
 venv/
 *.pyc
 .cloudflared/
+next-env.d.ts
+*.tsbuildinfo
+package-lock.json
